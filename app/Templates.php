@@ -230,14 +230,16 @@ HTML;
 
     private static function defaultTemplate(string $name): string
     {
-        return match ($name) {
-            'T3' => <<<HTML
+        switch ($name) {
+            case 'T3':
+                return <<<HTML
 <div class="qblock" data-template="{{ template_name }}" data-type="{{ question_type }}">
   <div class="qtext"><span class="qnum">{{ question_index }}. </span>{{ statement_html }}</div>
   {{ images }}
 </div>
-HTML,
-            default => self::BASE_TEMPLATE,
-        };
+HTML;
+            default:
+                return self::BASE_TEMPLATE;
+        }
     }
 }
