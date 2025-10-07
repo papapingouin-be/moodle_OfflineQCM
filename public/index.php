@@ -142,7 +142,11 @@ try {
             if (!$root) throw new RuntimeException('Pas de lot en cours');
             $lot = Pipeline::workingLotDir();
             $grid = new GridModule();
-            $paths = $grid->generate($root, $lot);
+            try {
+                $paths = $grid->generate($root, $lot);
+            } catch (GridModuleUnavailableException $e) {
+                json_response(['ok'=>false, 'error'=>$e->getMessage()], 503);
+            }
             $_SESSION['grid_files'] = $paths;
             json_response(['ok'=>true, 'files'=>$paths]);
             break;
