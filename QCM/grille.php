@@ -4,14 +4,14 @@
 // uploading a ZIP of PDF forms, extracting the list of PDFs, selecting a
 // form, uploading a CSV of students and filling the form for each student.
 // All heavy lifting (ZIP extraction, CSV parsing, PDF manipulation) is
-// performed client‑side with modern JavaScript libraries. PHP is only
-// used to deliver the page and could be extended for server‑side
+// performed client-side with modern JavaScript libraries. PHP is only
+// used to deliver the page and could be extended for server-side
 // processing in the future.
 
 // We disable any caching to ensure fresh content on each reload.
-header('Cache‑Control: no‑store, no‑cache, must‑revalidate, max‑age=0');
-header('Cache‑Control: post‑check=0, pre‑check=0', false);
-header('Pragma: no‑cache');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -21,76 +21,76 @@ header('Pragma: no‑cache');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Générateur de formulaires étudiants</title>
     <!-- Minimal styling using Tailwind from a CDN for rapid layout. Tailwind is
-         utility‑first; feel free to replace with your preferred framework. -->
+         utility-first; feel free to replace with your preferred framework. -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- External JS libraries: JSZip for ZIP handling, pdf‑lib for PDF form
+    <!-- External JS libraries: JSZip for ZIP handling, pdf-lib for PDF form
          manipulation, and PapaParse for CSV parsing. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         /* Custom styles for log area and file drop zones */
-        .file‑drop {
+        .file-drop {
             border: 2px dashed #cbd5e0;
-            border‑radius: 0.375rem;
+            border-radius: 0.375rem;
             padding: 1.5rem;
-            text‑align: center;
+            text-align: center;
             cursor: pointer;
         }
-        .file‑drop.dragover {
-            border‑color: #3182ce;
-            background‑color: #ebf8ff;
+        .file-drop.dragover {
+            border-color: #3182ce;
+            background-color: #ebf8ff;
         }
         #logArea {
             height: 10rem;
-            overflow‑y: auto;
-            white‑space: pre‑wrap;
+            overflow-y: auto;
+            white-space: pre-wrap;
             background: #f7fafc;
             border: 1px solid #e2e8f0;
             padding: 0.5rem;
-            font‑family: monospace;
+            font-family: monospace;
         }
     </style>
 </head>
-<body class="bg‑gray‑50 min‑h‑screen py‑6 flex flex‑col items‑center justify‑start">
-    <h1 class="text‑2xl font‑bold mb‑4">Générateur de formulaires étudiants</h1>
-    <div class="w‑11/12 max‑w‑3xl space‑y‑4">
+<body class="bg-gray-50 min-h-screen py-6 flex flex-col items-center justify-start">
+    <h1 class="text-2xl font-bold mb-4">Générateur de formulaires étudiants</h1>
+    <div class="w-11/12 max-w-3xl space-y-4">
         <!-- Section for uploading the ZIP of PDF forms -->
         <div>
-            <label class="block font‑medium mb‑2">1. Chargez l'archive ZIP contenant les formulaires PDF :</label>
-            <div id="zipDrop" class="file‑drop">
+            <label class="block font-medium mb-2">1. Chargez l'archive ZIP contenant les formulaires PDF :</label>
+            <div id="zipDrop" class="file-drop">
                 <input type="file" id="zipInput" accept=".zip" class="hidden" />
                 <p id="zipInstruction">Déposez le fichier ZIP ici ou cliquez pour sélectionner.</p>
             </div>
-            <div id="zipStatus" class="mt‑2 text‑sm text‑gray‑600"></div>
+            <div id="zipStatus" class="mt-2 text-sm text-gray-600"></div>
         </div>
 
         <!-- Section for selecting a specific PDF form from the ZIP -->
         <div id="formSelection" class="hidden">
-            <label class="block font‑medium mb‑2">2. Choisissez le formulaire à utiliser :</label>
-            <select id="formSelect" class="w‑full border border‑gray‑300 rounded px‑2 py‑1">
+            <label class="block font-medium mb-2">2. Choisissez le formulaire à utiliser :</label>
+            <select id="formSelect" class="w-full border border-gray-300 rounded px-2 py-1">
             </select>
         </div>
 
         <!-- Section for uploading the CSV of students -->
         <div id="studentsSection" class="hidden">
-            <label class="block font‑medium mb‑2">3. Chargez la liste des étudiants (CSV) :</label>
-            <div id="studentsDrop" class="file‑drop">
+            <label class="block font-medium mb-2">3. Chargez la liste des étudiants (CSV) :</label>
+            <div id="studentsDrop" class="file-drop">
                 <input type="file" id="studentsInput" accept=".csv" class="hidden" />
                 <p id="studentsInstruction">Déposez le fichier CSV ici ou cliquez pour sélectionner.</p>
             </div>
-            <div id="studentsStatus" class="mt‑2 text‑sm text‑gray‑600"></div>
+            <div id="studentsStatus" class="mt-2 text-sm text-gray-600"></div>
         </div>
 
         <!-- Action button to generate the output -->
         <div id="processSection" class="hidden">
-            <button id="processButton" class="bg‑blue‑600 text‑white px‑4 py‑2 rounded hover:bg‑blue‑700 disabled:bg‑gray‑400 disabled:cursor‑not‑allowed" disabled>Générer les formulaires complétés</button>
-            <div id="downloadLinkContainer" class="mt‑2"></div>
+            <button id="processButton" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Générer les formulaires complétés</button>
+            <div id="downloadLinkContainer" class="mt-2"></div>
         </div>
 
         <!-- Debug/log area -->
         <div>
-            <label class="block font‑medium mb‑2">Journal / Débogage :</label>
+            <label class="block font-medium mb-2">Journal / Débogage :</label>
             <div id="logArea"></div>
         </div>
     </div>
@@ -121,12 +121,12 @@ header('Pragma: no‑cache');
 
         // Utility: log messages to the debug area
         function log(message) {
-            const time = new Date().toLocaleTimeString('fr‑BE');
+            const time = new Date().toLocaleTimeString('fr-BE');
             logArea.textContent += `[${time}] ${message}\n`;
             logArea.scrollTop = logArea.scrollHeight;
         }
 
-        // Utility: handle drag‑and‑drop style highlighting
+        // Utility: handle drag-and-drop style highlighting
         function setupDragAndDrop(dropZone, inputElement, instruction) {
             ['dragenter', 'dragover'].forEach(eventName => {
                 dropZone.addEventListener(eventName, (e) => {
@@ -152,7 +152,7 @@ header('Pragma: no‑cache');
             dropZone.addEventListener('click', () => inputElement.click());
         }
 
-        // Initialise drag‑and‑drop behaviour
+        // Initialise drag-and-drop behaviour
         setupDragAndDrop(zipDrop, zipInput, zipInstruction);
         setupDragAndDrop(studentsDrop, studentsInput, studentsInstruction);
 
@@ -277,7 +277,7 @@ header('Pragma: no‑cache');
                     // Pour chaque champ du CSV qui correspond à un champ du formulaire
                     Object.keys(row).forEach(key => {
                         try {
-                            // pdf‑lib lève une exception si le champ n’existe pas.
+                            // pdf-lib lève une exception si le champ n’existe pas.
                             const field = form.getField(key);
                             // Vérifier que le champ est un champ texte avant de définir la valeur.
                             // D’autres types de champs pourraient nécessiter des méthodes spécifiques.
@@ -309,7 +309,7 @@ header('Pragma: no‑cache');
                 link.href = url;
                 link.download = 'formulaires_etudiants.zip';
                 link.textContent = 'Télécharger l’archive ZIP des formulaires générés';
-                link.className = 'text‑blue‑600 underline';
+                link.className = 'text-blue-600 underline';
                 downloadLinkContainer.appendChild(link);
                 log('Génération terminée. Lien de téléchargement prêt.');
             } catch (error) {
