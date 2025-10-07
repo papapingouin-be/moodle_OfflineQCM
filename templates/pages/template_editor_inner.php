@@ -89,18 +89,44 @@ $currentMeta = $types[$normalized] ?? ['label' => $normalized, 'description' => 
     const titleEl = document.getElementById('templateTitle');
     const descEl = document.getElementById('templateDescription');
 
-    if (typeof ace === 'undefined') {
-      statusEl.textContent = 'Ace Editor n\'a pas pu être chargé.';
-      statusEl.classList.add('error');
-      return;
+    const editorHost = document.getElementById('templateEditor');
+    let getContent = () => initialContent || '';
+    let setContent = () => {};
+
+    function activateFallback(message){
+      const textarea = document.createElement('textarea');
+      textarea.id = 'templateEditorFallback';
+      textarea.className = 'code-editor template-editor-fallback';
+      textarea.setAttribute('aria-label', "Éditeur de template (mode texte simple)");
+      textarea.spellcheck = false;
+      textarea.value = initialContent || '';
+      if (editorHost && editorHost.parentNode) {
+        editorHost.parentNode.replaceChild(textarea, editorHost);
+      }
+      statusEl.textContent = message || "Ace Editor n'a pas pu être chargé. Passage en éditeur texte.";
+      statusEl.classList.remove('error', 'success');
+      statusEl.classList.add('warning');
+      setContent = value => { textarea.value = value || ''; };
+      getContent = () => textarea.value;
     }
 
-    const editor = ace.edit('templateEditor');
-    editor.setTheme('ace/theme/textmate');
-    editor.session.setMode('ace/mode/html');
-    editor.session.setUseWrapMode(true);
-    editor.setOptions({ fontSize: '14px', showPrintMargin: false });
-    editor.setValue(initialContent || '', -1);
+    if (typeof ace !== 'undefined') {
+      try {
+        const editor = ace.edit('templateEditor');
+        editor.setTheme('ace/theme/textmate');
+        editor.session.setMode('ace/mode/html');
+        editor.session.setUseWrapMode(true);
+        editor.setOptions({ fontSize: '14px', showPrintMargin: false });
+        editor.setValue(initialContent || '', -1);
+        setContent = value => { editor.setValue(value || '', -1); };
+        getContent = () => editor.getValue();
+      } catch (err) {
+        console.error('Ace initialisation failed', err);
+        activateFallback("Ace Editor a rencontré une erreur. Passage en éditeur texte.");
+      }
+    } else {
+      activateFallback("Ace Editor n'a pas pu être chargé. Passage en éditeur texte.");
+    }
 
     updatePlaceholderList(placeholderList, initialPlaceholders);
 
@@ -115,13 +141,13 @@ $currentMeta = $types[$normalized] ?? ['label' => $normalized, 'description' => 
     typeSelect.addEventListener('change', async () => {
       const type = typeSelect.value;
       statusEl.textContent = '';
-      statusEl.classList.remove('success', 'error');
+      statusEl.classList.remove('success', 'error', 'warning');
       try {
         const res = await fetch(`?action=load_template&type=${encodeURIComponent(type)}`);
         if (!res.ok) throw new Error('Chargement impossible');
         const js = await res.json();
         if (!js.ok) throw new Error(js.error || 'Erreur lors du chargement');
-        editor.setValue(js.content || '', -1);
+        setContent(js.content || '');
         updatePlaceholderList(placeholderList, js.placeholders || []);
         applyMeta(js.type || type);
       } catch (err) {
@@ -133,12 +159,12 @@ $currentMeta = $types[$normalized] ?? ['label' => $normalized, 'description' => 
     document.getElementById('saveTemplate').addEventListener('click', async () => {
       const type = typeSelect.value;
       statusEl.textContent = 'Enregistrement…';
-      statusEl.classList.remove('error', 'success');
+      statusEl.classList.remove('error', 'success', 'warning');
       try {
         const res = await fetch('?action=save_template', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type, content: editor.getValue() })
+          body: JSON.stringify({ type, content: getContent() })
         });
         const js = await res.json();
         if (!res.ok || !js.ok) throw new Error(js.error || 'Erreur lors de la sauvegarde');
