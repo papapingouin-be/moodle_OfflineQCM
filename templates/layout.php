@@ -18,6 +18,7 @@
       <div>
         <a href="?action=home" class="btn">Accueil</a>
         <a href="?action=editor" class="btn">Éditeur</a>
+        <a href="?action=template_editor" class="btn">Templates</a>
         <a href="?action=export" class="btn">Exporter</a>
 		<a href="?action=convcsv" class="btn">QCM chatGPT</a>
 		<a href="?action=grille" class="btn primary">Grille</a>

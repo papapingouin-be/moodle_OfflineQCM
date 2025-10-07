@@ -70,6 +70,7 @@ $typesUsed = array_keys($typesUsed);
       <a class="btn" href="?action=export">Exporter (rendu final)</a>
       <button class="btn ghost" id="editTemplate" data-types='<?= htmlspecialchars(json_encode($typesUsed, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), ENT_QUOTES) ?>'>Éditer les templates</button>
     </div>
+    <p class="text-muted small">Le bouton «&nbsp;Éditer les templates&nbsp;» ouvre l’éditeur dans une nouvelle fenêtre. Vous pouvez également y accéder via le bouton «&nbsp;Templates&nbsp;» dans la barre supérieure.</p>
   </div>
 </div>
 <script>

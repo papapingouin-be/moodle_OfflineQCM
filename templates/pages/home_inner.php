@@ -50,6 +50,10 @@
   <a class="btn" href="?action=editor">Ouvrir l’éditeur</a>
 </div>
 
+<h3>Éditeur de templates de questions</h3>
+<p class="text-muted">Utilisez cet éditeur pour personnaliser l’affichage HTML des différentes formes de questions (T1, T2, …). Il peut être ouvert à tout moment.</p>
+<a class="btn ghost" href="?action=template_editor" target="_blank">Ouvrir l’éditeur de templates</a>
+
 <h3>Debug</h3>
 <div class="toolbox">
   <a class="btn" href="?action=open_intermediate" target="_blank">Voir intermediate.html</a>
