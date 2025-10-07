@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+final class GridModuleUnavailableException extends RuntimeException {}
+
 /**
  * Classe de liaison avec le module de grilles de réponses.
  * Cette implémentation est un simple socle en attendant
@@ -22,6 +24,8 @@ final class GridModule {
      */
     public function generate(string $zipRoot, string $outputDir): array {
         // Le projet grille n'est pas encore intégré : on signale l'absence.
-        throw new RuntimeException('Module grille non installé dans ' . $this->moduleDir);
+        throw new GridModuleUnavailableException(
+            'Module grille indisponible. Installez-le dans ' . $this->moduleDir
+        );
     }
 }
