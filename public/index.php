@@ -67,6 +67,38 @@ try {
             view('pages/editor.php', ['title'=>'Éditeur & Template']);
             break;
 
+        case 'template_editor':
+            $type = $_GET['type'] ?? 'T1';
+            view('pages/template_editor.php', [
+                'title' => 'Éditeur de template',
+                'type'  => $type,
+            ]);
+            break;
+
+        case 'load_template':
+            $type = $_GET['type'] ?? '';
+            $normalized = Templates::normalizeName($type);
+            $content = Templates::loadTemplateContent($normalized, $normalized);
+            $types = Templates::availableTypes();
+            $meta = $types[$normalized] ?? ['label'=>$normalized, 'description'=>''];
+            json_response([
+                'ok'           => true,
+                'type'         => $normalized,
+                'content'      => $content,
+                'label'        => $meta['label'] ?? $normalized,
+                'description'  => $meta['description'] ?? '',
+                'placeholders' => Templates::placeholderDocs($normalized),
+            ]);
+            break;
+
+        case 'save_template':
+            $payload = json_decode(file_get_contents('php://input'), true) ?? [];
+            $type = $payload['type'] ?? '';
+            $content = $payload['content'] ?? '';
+            Templates::saveTemplateContent($type, $content);
+            json_response(['ok'=>true]);
+            break;
+
         case 'save_groups':
             $payload = json_decode(file_get_contents('php://input'), true) ?? [];
             $_SESSION['groups'] = $payload['groups'] ?? [];

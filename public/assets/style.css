@@ -21,3 +21,19 @@ a{ color:var(--primary); text-decoration:none } .container{ max-width:1200px; ma
 .group{ padding:12px; border:1px solid var(--border); border-radius:12px; background:#fff; }
 .group.layout-horizontal .gqs{ display:flex; gap:16px; }
 .group.layout-vertical .gqs{ display:flex; flex-direction:column; gap:16px; }
+.text-muted{ color:var(--muted); }
+.text-muted.small{ font-size:12px; }
+.template-editor{ display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; }
+.template-editor .editor-pane{ flex:2 1 620px; min-width:320px; display:flex; flex-direction:column; gap:12px; }
+.template-editor .docs-pane{ flex:1 1 260px; min-width:240px; background:rgba(148,163,184,0.08); border:1px solid var(--border); border-radius:12px; padding:16px; }
+.template-meta h4{ margin:0; }
+.template-meta p{ margin:4px 0 0; }
+.code-editor{ width:100%; height:520px; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.template-toolbar select{ padding:8px 10px; border:1px solid var(--border); border-radius:10px; background:#fff; }
+.placeholder-list{ list-style:none; padding:0; margin:12px 0 0; display:flex; flex-direction:column; gap:12px; }
+.placeholder-list li{ border:1px solid var(--border); border-radius:10px; padding:10px; background:#fff; }
+.placeholder-list code{ display:inline-block; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px; padding:2px 6px; border-radius:6px; background:rgba(37,99,235,0.08); color:#1d4ed8; }
+.placeholder-list p{ margin:8px 0 0; font-size:13px; color:var(--muted); }
+#templateStatus{ min-height:20px; }
+#templateStatus.success{ color:#16a34a; }
+#templateStatus.error{ color:#dc2626; }
