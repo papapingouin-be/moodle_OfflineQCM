@@ -7,7 +7,7 @@ final class Templates
 
     private const BASE_TEMPLATE = <<<HTML
 <div class="qblock" data-template="{{ template_name }}" data-type="{{ question_type }}">
-  <div class="qtext"><span class="qnum">{{ question_index }}. </span>{{ statement_html }}</div>
+  <div class="qtext"><span class="qnum">{{ question_index }}. </span><br>{{ statement_html }}</div>
   {{ images }}
   {{ answers_list }}
 </div>
@@ -239,7 +239,7 @@ HTML;
             case 'T3':
                 return <<<HTML
 <div class="qblock" data-template="{{ template_name }}" data-type="{{ question_type }}">
-  <div class="qtext"><span class="qnum">{{ question_index }}. </span>{{ statement_html }}</div>
+  <div class="qtext"><span class="qnum">{{ question_index }}. </span><br>{{ statement_html }}</div>
   {{ images }}
 </div>
 HTML;
