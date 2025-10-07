@@ -3,6 +3,12 @@ $extract = $_SESSION['extract'] ?? ['questions'=>[]];
 $groups  = $_SESSION['groups'] ?? [];
 $blocks  = Grouper::build($extract['questions'], $groups);
 $meta    = $_SESSION['meta'] ?? ['title' => '', 'letter' => ''];
+$typesUsed = [];
+foreach ($extract['questions'] as $q) {
+  $t = $q['type'] ?? '';
+  if ($t !== '') $typesUsed[$t] = true;
+}
+$typesUsed = array_keys($typesUsed);
 ?>
 
 <h3>Paramètres du questionnaire</h3>
@@ -60,7 +66,10 @@ $meta    = $_SESSION['meta'] ?? ['title' => '', 'letter' => ''];
   <div class="card" style="flex:2; min-width:380px">
     <h4>Prévisualisation</h4>
     <div class="preview" id="preview">—</div>
-    <div class="row"><a class="btn" href="?action=export">Exporter (rendu final)</a></div>
+    <div class="row">
+      <a class="btn" href="?action=export">Exporter (rendu final)</a>
+      <button class="btn ghost" id="editTemplate" data-types='<?= htmlspecialchars(json_encode($typesUsed, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), ENT_QUOTES) ?>'>Éditer les templates</button>
+    </div>
   </div>
 </div>
 <script>
@@ -143,4 +152,20 @@ async function previewAll(){
 
 renderTable();
 previewAll();
+
+const editBtn = document.getElementById('editTemplate');
+if (editBtn) {
+  const types = (() => {
+    try {
+      return JSON.parse(editBtn.dataset.types || '[]');
+    } catch (e) {
+      return [];
+    }
+  })();
+  editBtn.addEventListener('click', () => {
+    const targetType = types.length ? types[0] : 'T1';
+    const features = 'width=1100,height=800,menubar=no,toolbar=no,location=no';
+    window.open(`?action=template_editor&type=${encodeURIComponent(targetType)}`, '_blank', features);
+  });
+}
 </script>

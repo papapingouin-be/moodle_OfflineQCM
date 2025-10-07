@@ -213,13 +213,12 @@ final class Extractor
             }
 
             $type = $this->decideType($qHtml, $answers);
-            $template = 'Q1';
 
             $idx++;
             $questions[] = [
                 'index'     => $idx,
                 'type'      => $type,
-                'template'  => $template,
+                'template'  => $type,
                 'statement' => [
                     'html'   => $qHtml,
                     'text'   => $stmtText,
