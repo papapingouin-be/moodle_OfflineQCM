@@ -1,0 +1,23 @@
+/* Base UI */
+:root{ --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#475569; --primary:#2563eb; --border:#e5e7eb; }
+*{ box-sizing:border-box } html,body{ margin:0; padding:0; background:var(--bg); color:var(--text); font-family:Inter,system-ui,Arial,sans-serif; }
+a{ color:var(--primary); text-decoration:none } .container{ max-width:1200px; margin:0 auto; padding:20px }
+.card{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 1px 2px rgba(0,0,0,.04) }
+.row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center } .btn{ display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border:1px solid var(--border); background:#fff; border-radius:10px; cursor:pointer }
+.btn.primary{ background:var(--primary); color:#fff; border-color:transparent } .btn.ghost{ background:transparent }
+.badge{ display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid var(--border); font-size:12px; color:var(--muted) }
+.table{ width:100%; border-collapse:collapse } .table th,.table td{ border:1px solid var(--border); padding:8px; text-align:left }
+.footer{ color:var(--muted); font-size:12px; margin-top:12px }
+.toolbox{ display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 } .kv{ display:grid; grid-template-columns: 140px 1fr; gap:8px; align-items:center } .kv label{ color:var(--muted); font-size:12px }
+.qwrap article{ margin-bottom:10px } .preview{ border:1px dashed var(--border); padding:12px; border-radius:12px; background:#fcfcfd }
+.log{ max-height:240px; overflow:auto; background:#0b1020; color:#e6edf3; font-family:ui-monospace, SFMono-Regular; padding:8px; border-radius:8px }
+.hidden{ display:none }
+.qblock{ padding:12px; border:1px solid var(--border); border-radius:12px; background:#fff; }
+.qblock .qtext{ font-weight:600; margin-bottom:8px; }
+.qimgs{ display:flex; gap:8px; flex-wrap:wrap; margin:8px 0; }
+.qimg{ max-width:180px; max-height:120px; object-fit:contain; }
+.answers{ list-style-type: lower-alpha; padding-left:20px; margin:6px 0; }
+.answers .ans{ margin:6px 0; }
+.group{ padding:12px; border:1px solid var(--border); border-radius:12px; background:#fff; }
+.group.layout-horizontal .gqs{ display:flex; gap:16px; }
+.group.layout-vertical .gqs{ display:flex; flex-direction:column; gap:16px; }
