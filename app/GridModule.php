@@ -9,7 +9,10 @@ final class GridModuleUnavailableException extends RuntimeException {}
  * l'intégration du projet "grille".
  */
 final class GridModule {
-    private string $moduleDir;
+    /**
+     * @var string
+     */
+    private $moduleDir;
 
     public function __construct(string $moduleDir = GRID_MODULE_PATH) {
         $this->moduleDir = $moduleDir;
