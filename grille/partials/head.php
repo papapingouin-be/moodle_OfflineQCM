@@ -26,7 +26,7 @@ header('Pragma: no-cache');
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <!-- PDF.js: extract text from PDF lists of students (if needed).
          We use the 2.7.570 version because it exposes a global `pdfjsLib`
-         object, which simplifies client‑side usage.  Newer 3.x/4.x builds
+         object, which simplifies client-side usage.  Newer 3.x/4.x builds
          require ESM import patterns and do not create a global, leading to
          undefined references in the browser environment. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.min.js"></script>
