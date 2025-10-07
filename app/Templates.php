@@ -189,11 +189,16 @@ HTML;
             $letters[] = chr(65 + ($i % 26));
         }
 
+        $statementHtml = $statement['html'] ?? '';
+        if (is_string($statementHtml)) {
+            $statementHtml = ltrim($statementHtml);
+        }
+
         return [
             '{{ template_name }}'   => htmlspecialchars($templateName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
             '{{ question_type }}'   => htmlspecialchars($type, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
             '{{ question_index }}'  => htmlspecialchars($index, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            '{{ statement_html }}'  => $statement['html'] ?? '',
+            '{{ statement_html }}'  => $statementHtml,
             '{{ statement_text }}'  => htmlspecialchars((string) ($statement['text'] ?? ''), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
             '{{ images }}'          => $images,
             '{{ answers_list }}'    => $answersList,
