@@ -191,7 +191,12 @@ try {
 			
         case 'open_intermediate': {
             $file = $_SESSION['intermediate_html'] ?? null;
-            if (!$file || !is_readable($file)) throw new RuntimeException('intermediate.html introuvable');
+            if (!$file || !is_readable($file)) {
+                http_response_code(404);
+                header('Content-Type: text/plain; charset=utf-8');
+                echo "intermediate.html introuvable\n";
+                exit;
+            }
             $html = file_get_contents($file);
             // Réécrit les liens d'images pour passage via ?action=media&p=
             if ($html !== false) {
@@ -202,7 +207,12 @@ try {
 
         case 'open_export': {
             $file = $_SESSION['last_export'] ?? null;
-            if (!$file || !is_readable($file)) throw new RuntimeException('render.html introuvable');
+            if (!$file || !is_readable($file)) {
+                http_response_code(404);
+                header('Content-Type: text/plain; charset=utf-8');
+                echo "render.html introuvable\n";
+                exit;
+            }
             $html = file_get_contents($file);
             if ($html !== false) {
                 $html = rewrite_media_srcs($html);
