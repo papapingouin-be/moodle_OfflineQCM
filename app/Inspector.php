@@ -36,16 +36,27 @@ final class Inspector
         }
         $start = (int)$mStart[0][1];
 
-        if (!preg_match($this->pointsPRegex(), $body, $mEnd, PREG_OFFSET_CAPTURE, $start)) {
-            return null; // pas de <p>(points) après → stop
+        // Cas nominal : on trouve un paragraphe de points qui borne le segment
+        if (preg_match($this->pointsPRegex(), $body, $mEnd, PREG_OFFSET_CAPTURE, $start)) {
+            $pStart = (int)$mEnd[0][1];
+            $pEnd   = $pStart + strlen($mEnd[0][0]);
+
+            $full   = substr($body, $start, $pEnd - $start);
+            $pHtml  = $mEnd[0][0];
+
+            return ['start'=>$start,'end'=>$pEnd,'full'=>$full,'points_html'=>$pHtml];
         }
-        $pStart = (int)$mEnd[0][1];
-        $pEnd   = $pStart + strlen($mEnd[0][0]);
 
-        $full   = substr($body, $start, $pEnd - $start);
-        $pHtml  = $mEnd[0][0];
+        // Fallback : aucun <p>(points) → on coupe avant le prochain <ol type="1"> ou à la fin
+        if (preg_match($this->ol1OpenRegex(), $body, $mNext, PREG_OFFSET_CAPTURE, $start + 1)) {
+            $pEnd = (int)$mNext[0][1];
+        } else {
+            $pEnd = strlen($body);
+        }
+        if ($pEnd <= $start) return null;
 
-        return ['start'=>$start,'end'=>$pEnd,'full'=>$full,'points_html'=>$pHtml];
+        $full = substr($body, $start, $pEnd - $start);
+        return ['start'=>$start,'end'=>$pEnd,'full'=>$full,'points_html'=>null];
     }
 
     /**
