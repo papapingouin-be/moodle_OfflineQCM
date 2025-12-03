@@ -27,11 +27,25 @@ final class Extractor
     private function nextStrictSegment(string $body, int $offset): ?array {
         if (!preg_match($this->ol1OpenRegex(), $body, $mStart, PREG_OFFSET_CAPTURE, $offset)) return null;
         $start = $mStart[0][1];
-        if (!preg_match($this->pointsPRegex(), $body, $mEnd, PREG_OFFSET_CAPTURE, $start)) return null;
-        $end   = $mEnd[0][1] + strlen($mEnd[0][0]);
-        $full  = substr($body, $start, $end - $start);
-        $pHtml = $mEnd[0][0];
-        return ['start'=>$start, 'end'=>$end, 'full'=>$full, 'points_html'=>$pHtml];
+
+        // 🔎 Cas standard : segment borné par le <p>(points)</p>
+        if (preg_match($this->pointsPRegex(), $body, $mEnd, PREG_OFFSET_CAPTURE, $start)) {
+            $end   = $mEnd[0][1] + strlen($mEnd[0][0]);
+            $full  = substr($body, $start, $end - $start);
+            $pHtml = $mEnd[0][0];
+            return ['start'=>$start, 'end'=>$end, 'full'=>$full, 'points_html'=>$pHtml];
+        }
+
+        // 🚑 Fallback : aucun paragraphe de points ⇒ on découpe jusqu’au prochain <ol type="1">, ou jusqu’à la fin
+        if (preg_match($this->ol1OpenRegex(), $body, $mNext, PREG_OFFSET_CAPTURE, $start + 1)) {
+            $end = (int)$mNext[0][1];
+        } else {
+            $end = strlen($body);
+        }
+        if ($end <= $start) return null; // sécurité
+
+        $full = substr($body, $start, $end - $start);
+        return ['start'=>$start, 'end'=>$end, 'full'=>$full, 'points_html'=>null];
     }
 
     private function splitZones(string $full): array {
