@@ -64,3 +64,17 @@
   <button class="btn" id="btn-log-clear">Vider log</button>
 </div>
 <pre class="log" id="log"></pre>
+<div class="card" style="margin-top:10px;">
+  <h4>Bilan rapide</h4>
+  <ul id="service-status" class="text-muted" style="margin-top:6px;">
+    <li>Upload: en attente</li>
+    <li>Scan DOCX: en attente</li>
+    <li>Conversion HTML: en attente</li>
+    <li>Extraction: en attente</li>
+    <li>Log debug: en attente</li>
+  </ul>
+
+  <h4 style="margin-top:10px;">Log brut</h4>
+  <pre class="log" id="raw-log">Aucun log brut chargé.</pre>
+</div>
+
